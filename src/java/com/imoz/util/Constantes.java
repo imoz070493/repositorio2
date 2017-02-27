@@ -1,4 +1,4 @@
-package cjava.util;
+package com.imoz.util;
 
 
 public class Constantes {

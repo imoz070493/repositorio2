@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cjava.daos;
+package com.imoz.daos;
 
-import cjava.entidades.Presentacion;
-import cjava.servicios.EntidadService;
-import cjava.util.Constantes;
+import com.imoz.entidades.Articulo;
+import com.imoz.entidades.Presentacion;
+import com.imoz.servicios.EntidadService;
+import com.imoz.util.Constantes;
 
 /**
  *
@@ -29,5 +30,9 @@ public class DaoFactory {
     
     public EntidadService<Presentacion> getPresentacionDao(){
         return new PresentacionPSTDAO();
+    }
+    
+    public EntidadService<Articulo> getArticuloDao(){
+        return new ArticuloPSTDAO();
     }
 }

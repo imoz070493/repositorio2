@@ -1,4 +1,4 @@
-package cjava.servicios;
+package com.imoz.servicios;
 
 import java.util.List;
 

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cjava.pruebas;
+package com.imoz.pruebas;
 
-import cjava.daos.DaoFactory;
-import cjava.entidades.Presentacion;
-import cjava.servicios.EntidadService;
+import com.imoz.daos.DaoFactory;
+import com.imoz.entidades.Presentacion;
+import com.imoz.servicios.EntidadService;
 
 /**
  *

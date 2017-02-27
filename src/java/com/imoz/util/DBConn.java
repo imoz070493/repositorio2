@@ -1,4 +1,4 @@
-package cjava.util;
+package com.imoz.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;

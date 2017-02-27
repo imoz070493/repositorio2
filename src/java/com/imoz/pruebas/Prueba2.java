@@ -1,9 +1,9 @@
 
-package cjava.pruebas;
+package com.imoz.pruebas;
 
-import cjava.daos.DaoFactory;
-import cjava.entidades.Presentacion;
-import cjava.servicios.EntidadService;
+import com.imoz.daos.DaoFactory;
+import com.imoz.entidades.Presentacion;
+import com.imoz.servicios.EntidadService;
 
 public class Prueba2 {
     
@@ -18,7 +18,7 @@ public class Prueba2 {
         System.out.println("////////////////////////////");
         
         for (Presentacion p : dao.obtenerEntidades()) {
-            System.out.println(p);            
+            
         }
         
     }

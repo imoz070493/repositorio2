@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cjava.daos;
+package com.imoz.daos;
 
-import cjava.entidades.Presentacion;
-import cjava.entidades.Presentacion;
-import cjava.servicios.EntidadService;
-import cjava.util.DBConn;
+import com.imoz.entidades.Articulo;
+import com.imoz.servicios.EntidadService;
+import com.imoz.util.DBConn;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,21 +20,25 @@ import java.util.List;
  *
  * @author Irving
  */
-public class PresentacionPSTDAO implements EntidadService<Presentacion>{
+public class ArticuloPSTDAO implements EntidadService<Articulo>{
 
     Connection con;
     PreparedStatement pst;
     ResultSet rst;
     
     @Override
-    public int crearEntidad(Presentacion t) {
+    public int crearEntidad(Articulo t) {
         int fila=0;
         try {
-            String sql = "insert into presentacion values(?,?)";
+            String sql = "insert into articulo values(?,?,?,?,?,?)";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
-            pst.setString(1, t.getNombre());
-            pst.setString(2,t.getDescripcion());
+            pst.setString(1, t.getCodigo());
+            pst.setString(2, t.getNombre());
+            pst.setString(3,t.getDescripcion());
+            pst.setBytes(4,t.getImage());
+            pst.setInt(5,t.getIdCategoria());
+            pst.setInt(6,t.getIdPresentacion());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -47,7 +51,7 @@ public class PresentacionPSTDAO implements EntidadService<Presentacion>{
     public int eliminarEntidad(int codigo) {
         int fila=0;
         try {
-            String sql = "delete from presentacion where idpresentacion=?";
+            String sql = "delete from articulo where idarticulo=?";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, codigo);
@@ -60,15 +64,15 @@ public class PresentacionPSTDAO implements EntidadService<Presentacion>{
     }
 
     @Override
-    public int actualizarEntidad(Presentacion t) {
+    public int actualizarEntidad(Articulo t) {
         int fila=0;
         try {
-            String sql = "update presentacion set nombre=?, descripcion=? where idpresentacion=?";
+            String sql = "update articulo set nombre=?, descripcion=? where idarticulo=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             pst.setString(1, t.getNombre());
             pst.setString(2,t.getDescripcion());
-            pst.setInt(3, t.getId());
+            pst.setInt(3, t.getIdArticulo());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -78,49 +82,57 @@ public class PresentacionPSTDAO implements EntidadService<Presentacion>{
     }
 
     @Override
-    public List<Presentacion> obtenerEntidades() {
-        List<Presentacion> lista=null;
-        Presentacion presentacion=null;
+    public List<Articulo> obtenerEntidades() {
+        List<Articulo> lista=null;
+        Articulo articulo=null;
         try {
-            String sql = "select * from presentacion";
+            String sql = "select * from articulo";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             rst = pst.executeQuery();
             lista = new ArrayList<>();
             while(rst.next()){
-                presentacion = new Presentacion();
-                presentacion.setId(rst.getInt(1));
-                presentacion.setNombre(rst.getString(2));
-                presentacion.setDescripcion(rst.getString(3));
-                lista.add(presentacion);
+                articulo = new Articulo();
+                articulo.setIdArticulo(rst.getInt(1));
+                articulo.setCodigo(rst.getString(2));
+                articulo.setNombre(rst.getString(3));
+                articulo.setDescripcion(rst.getString(4));
+                articulo.setImage(rst.getBytes(5));
+                articulo.setIdCategoria(rst.getInt(6));
+                articulo.setIdPresentacion(rst.getInt(7));
+                lista.add(articulo);
             }
             con.close();
         }catch(SQLException ex){
-            System.out.println(ex.getMessage());
+            System.out.println("Error:"+ex.getMessage());
         }
         return lista;
     }
 
     @Override
-    public Presentacion buscarEntidad(int codigo) {
-        Presentacion presentacion=null;
+    public Articulo buscarEntidad(int codigo) {
+        Articulo articulo=null;
         try {
-            String sql = "select * from presentacion where idpresentacion=?";
+            String sql = "select * from articulo where idarticulo=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             pst.setInt(1, codigo);
             rst = pst.executeQuery();
             if(rst.next()){
-                presentacion = new Presentacion();
-                presentacion.setId(rst.getInt(1));
-                presentacion.setNombre(rst.getString(2));
-                presentacion.setDescripcion(rst.getString(3));
+                articulo = new Articulo();
+                articulo.setIdArticulo(rst.getInt(1));
+                articulo.setCodigo(rst.getString(2));
+                articulo.setNombre(rst.getString(3));
+                articulo.setDescripcion(rst.getString(4));
+                articulo.setImage(rst.getBytes(5));
+                articulo.setIdCategoria(rst.getInt(6));
+                articulo.setIdPresentacion(rst.getInt(7));
             }
             con.close();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());
         }
-        return presentacion;
+        return articulo;
     }
     
 }
