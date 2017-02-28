@@ -6,7 +6,10 @@
 package com.imoz.daos;
 
 import com.imoz.entidades.Articulo;
+import com.imoz.entidades.Cliente;
+import com.imoz.entidades.DetalleIngreso;
 import com.imoz.entidades.Presentacion;
+import com.imoz.entidades.Venta;
 import com.imoz.servicios.EntidadService;
 import com.imoz.util.Constantes;
 
@@ -34,5 +37,17 @@ public class DaoFactory {
     
     public EntidadService<Articulo> getArticuloDao(){
         return new ArticuloPSTDAO();
+    }
+    
+    public EntidadService<Cliente> getClienteDao(){
+        return new ClientePSTDAO();
+    }
+    
+    public EntidadService<DetalleIngreso> getDetalleIngresoDao(){
+        return new DetalleIngresoPSTDAO();
+    }
+    
+    public EntidadService<Venta> getVentaDao(){
+        return new VentaPSTDAO();
     }
 }

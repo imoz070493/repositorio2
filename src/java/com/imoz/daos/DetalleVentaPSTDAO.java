@@ -5,7 +5,7 @@
  */
 package com.imoz.daos;
 
-import com.imoz.entidades.Articulo;
+import com.imoz.entidades.DetalleVenta;
 import com.imoz.servicios.EntidadService;
 import com.imoz.util.DBConn;
 import java.sql.Connection;
@@ -19,25 +19,24 @@ import java.util.List;
  *
  * @author Irving
  */
-public class ArticuloPSTDAO implements EntidadService<Articulo>{
+public class DetalleVentaPSTDAO implements EntidadService<DetalleVenta>{
 
     Connection con;
     PreparedStatement pst;
     ResultSet rst;
     
     @Override
-    public int crearEntidad(Articulo t) {
+    public int crearEntidad(DetalleVenta t) {
         int fila=0;
         try {
-            String sql = "insert into articulo values(?,?,?,?,?,?)";
+            String sql = "insert into detalle_ingreso values(?,?,?,?,?,?)";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
-            pst.setString(1, t.getCodigo());
-            pst.setString(2, t.getNombre());
-            pst.setString(3,t.getDescripcion());
-            pst.setBytes(4,t.getImage());
-            pst.setInt(5,t.getIdCategoria());
-            pst.setInt(6,t.getIdPresentacion());
+            pst.setInt(1, t.getIdVenta());
+            pst.setInt(2, t.getIdDetalleIngreso());
+            pst.setInt(3,t.getCantidad());
+            pst.setDouble(4,t.getPrecioVenta());
+            pst.setDouble(5,t.getDescuento());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -50,7 +49,7 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     public int eliminarEntidad(int codigo) {
         int fila=0;
         try {
-            String sql = "delete from articulo where idarticulo=?";
+            String sql = "delete from detalle_venta where iddetalle_venta=?";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, codigo);
@@ -63,15 +62,20 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public int actualizarEntidad(Articulo t) {
+    public int actualizarEntidad(DetalleVenta t) {
         int fila=0;
         try {
-            String sql = "update articulo set nombre=?, descripcion=? where idarticulo=?";
+            String sql = "update detalle_venta set iddetalle_venta=?, idventa=?,"
+                    + "iddetalle_ingreso=?,cantidad=?, precio_venta=?,"
+                    + "descuento=? where iddetalle_venta=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
-            pst.setString(1, t.getNombre());
-            pst.setString(2,t.getDescripcion());
-            pst.setInt(3, t.getIdArticulo());
+            pst.setInt(1, t.getIdVenta());
+            pst.setInt(2, t.getIdDetalleIngreso());
+            pst.setInt(3,t.getCantidad());
+            pst.setDouble(4,t.getPrecioVenta());
+            pst.setDouble(5,t.getDescuento());
+            pst.setInt(6,t.getIdDetalleVenta());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -81,25 +85,24 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public List<Articulo> obtenerEntidades() {
-        List<Articulo> lista=null;
-        Articulo articulo=null;
+    public List<DetalleVenta> obtenerEntidades() {
+        List<DetalleVenta> lista=null;
+        DetalleVenta detalleVenta=null;
         try {
-            String sql = "select * from articulo";
+            String sql = "select * from detalle_venta";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             rst = pst.executeQuery();
             lista = new ArrayList<>();
             while(rst.next()){
-                articulo = new Articulo();
-                articulo.setIdArticulo(rst.getInt(1));
-                articulo.setCodigo(rst.getString(2));
-                articulo.setNombre(rst.getString(3));
-                articulo.setDescripcion(rst.getString(4));
-                articulo.setImage(rst.getBytes(5));
-                articulo.setIdCategoria(rst.getInt(6));
-                articulo.setIdPresentacion(rst.getInt(7));
-                lista.add(articulo);
+                detalleVenta = new DetalleVenta();
+                detalleVenta.setIdDetalleVenta(rst.getInt(1));
+                detalleVenta.setIdVenta(rst.getInt(2));
+                detalleVenta.setIdDetalleIngreso(rst.getInt(3));
+                detalleVenta.setCantidad(rst.getInt(4));
+                detalleVenta.setPrecioVenta(rst.getDouble(5));
+                detalleVenta.setDescuento(rst.getInt(6));
+                lista.add(detalleVenta);
             }
             con.close();
         }catch(SQLException ex){
@@ -109,29 +112,28 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public Articulo buscarEntidad(int codigo) {
-        Articulo articulo=null;
+    public DetalleVenta buscarEntidad(int codigo) {
+        DetalleVenta detalleVenta=null;
         try {
-            String sql = "select * from articulo where idarticulo=?";
+            String sql = "select * from detalle_venta where iddetalle_venta=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             pst.setInt(1, codigo);
             rst = pst.executeQuery();
             if(rst.next()){
-                articulo = new Articulo();
-                articulo.setIdArticulo(rst.getInt(1));
-                articulo.setCodigo(rst.getString(2));
-                articulo.setNombre(rst.getString(3));
-                articulo.setDescripcion(rst.getString(4));
-                articulo.setImage(rst.getBytes(5));
-                articulo.setIdCategoria(rst.getInt(6));
-                articulo.setIdPresentacion(rst.getInt(7));
+                detalleVenta = new DetalleVenta();
+                detalleVenta.setIdDetalleVenta(rst.getInt(1));
+                detalleVenta.setIdVenta(rst.getInt(2));
+                detalleVenta.setIdDetalleIngreso(rst.getInt(3));
+                detalleVenta.setCantidad(rst.getInt(4));
+                detalleVenta.setPrecioVenta(rst.getDouble(5));
+                detalleVenta.setDescuento(rst.getInt(6));
             }
             con.close();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());
         }
-        return articulo;
+        return detalleVenta;
     }
     
 }

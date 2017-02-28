@@ -5,7 +5,7 @@
  */
 package com.imoz.daos;
 
-import com.imoz.entidades.Articulo;
+import com.imoz.entidades.Categoria;
 import com.imoz.servicios.EntidadService;
 import com.imoz.util.DBConn;
 import java.sql.Connection;
@@ -19,25 +19,21 @@ import java.util.List;
  *
  * @author Irving
  */
-public class ArticuloPSTDAO implements EntidadService<Articulo>{
+public class CategoriaPSTDAO implements EntidadService<Categoria>{
 
     Connection con;
     PreparedStatement pst;
     ResultSet rst;
     
     @Override
-    public int crearEntidad(Articulo t) {
+    public int crearEntidad(Categoria t) {
         int fila=0;
         try {
-            String sql = "insert into articulo values(?,?,?,?,?,?)";
+            String sql = "insert into categoria values(?,?)";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
-            pst.setString(1, t.getCodigo());
-            pst.setString(2, t.getNombre());
-            pst.setString(3,t.getDescripcion());
-            pst.setBytes(4,t.getImage());
-            pst.setInt(5,t.getIdCategoria());
-            pst.setInt(6,t.getIdPresentacion());
+            pst.setString(1, t.getNombre());
+            pst.setString(2, t.getDescripcion());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -50,7 +46,7 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     public int eliminarEntidad(int codigo) {
         int fila=0;
         try {
-            String sql = "delete from articulo where idarticulo=?";
+            String sql = "delete from categoria where idCategoria=?";
             con = DBConn.getConnection();
             pst = con.prepareStatement(sql);
             pst.setInt(1, codigo);
@@ -63,15 +59,14 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public int actualizarEntidad(Articulo t) {
+    public int actualizarEntidad(Categoria t) {
         int fila=0;
         try {
-            String sql = "update articulo set nombre=?, descripcion=? where idarticulo=?";
+            String sql = "update categoria set nombre=?, descripcion=? where idCategoria=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             pst.setString(1, t.getNombre());
             pst.setString(2,t.getDescripcion());
-            pst.setInt(3, t.getIdArticulo());
             fila = pst.executeUpdate();
             con.close();
         }catch(SQLException ex){
@@ -81,25 +76,21 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public List<Articulo> obtenerEntidades() {
-        List<Articulo> lista=null;
-        Articulo articulo=null;
+    public List<Categoria> obtenerEntidades() {
+        List<Categoria> lista=null;
+        Categoria categoria;
         try {
-            String sql = "select * from articulo";
+            String sql = "select * from categoria";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             rst = pst.executeQuery();
             lista = new ArrayList<>();
             while(rst.next()){
-                articulo = new Articulo();
-                articulo.setIdArticulo(rst.getInt(1));
-                articulo.setCodigo(rst.getString(2));
-                articulo.setNombre(rst.getString(3));
-                articulo.setDescripcion(rst.getString(4));
-                articulo.setImage(rst.getBytes(5));
-                articulo.setIdCategoria(rst.getInt(6));
-                articulo.setIdPresentacion(rst.getInt(7));
-                lista.add(articulo);
+                categoria = new Categoria();
+                categoria.setIdCategoria(rst.getInt(1));
+                categoria.setNombre(rst.getString(2));
+                categoria.setDescripcion(rst.getString(3));
+                lista.add(categoria);
             }
             con.close();
         }catch(SQLException ex){
@@ -109,29 +100,25 @@ public class ArticuloPSTDAO implements EntidadService<Articulo>{
     }
 
     @Override
-    public Articulo buscarEntidad(int codigo) {
-        Articulo articulo=null;
+    public Categoria buscarEntidad(int codigo) {
+        Categoria categoria=null;
         try {
-            String sql = "select * from articulo where idarticulo=?";
+            String sql = "select * from categoria where idCategoria=?";
             con = DBConn.getConnection();
             pst = con.prepareCall(sql);
             pst.setInt(1, codigo);
             rst = pst.executeQuery();
             if(rst.next()){
-                articulo = new Articulo();
-                articulo.setIdArticulo(rst.getInt(1));
-                articulo.setCodigo(rst.getString(2));
-                articulo.setNombre(rst.getString(3));
-                articulo.setDescripcion(rst.getString(4));
-                articulo.setImage(rst.getBytes(5));
-                articulo.setIdCategoria(rst.getInt(6));
-                articulo.setIdPresentacion(rst.getInt(7));
+                categoria = new Categoria();
+                categoria.setIdCategoria(rst.getInt(1));
+                categoria.setNombre(rst.getString(2));
+                categoria.setDescripcion(rst.getString(3));
             }
             con.close();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());
         }
-        return articulo;
+        return categoria;
     }
     
 }
